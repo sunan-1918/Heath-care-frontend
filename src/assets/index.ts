@@ -36,6 +36,12 @@ const assets = {
     ophthalmology: require("./svgs/Ophthalmology.svg"),
     award: require("./svgs/award-icon.svg"),
   },
+  icon: {
+    search: require('./icons/search-icon.png'),
+    doctor: require('./icons/doctor-icon.png'),
+    appointment: require('./icons/appointment-icon.png'),
+    charity: require('./icons/charity-icon.png'),
+  }
 };
 
 export default assets;
