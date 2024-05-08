@@ -23,7 +23,6 @@ const LoginPage = () => {
     const onSubmit: SubmitHandler<Tlogin> = async (data) => {
 
         const loadingId = toast.loading("Loging...")
-        console.log(data);
 
         try {
             const response = await login(data);

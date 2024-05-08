@@ -1,5 +1,7 @@
 "use client"
+import { saveAccessToken } from "@/Service/actions/authservice";
 import { createPatient } from "@/Service/actions/createPatient";
+import { login } from "@/Service/actions/login";
 import assets from "@/assets";
 import { modifyPayload } from "@/utils/FormData/modifyPayload";
 import { Box, Button, Container, Grid, Stack, TextField, Typography } from "@mui/material";
@@ -39,9 +41,18 @@ const RegisterPage = () => {
             if (response.success === false) {
                 throw new Error(response)
             }
+
             if (response.success) {
                 toast.success(response.message, { id: loadingId })
-                router.push('/login')
+                const userInfo = await login({ email: data.patient.email, password: data.password });
+
+                if (userInfo.success === false) {
+                    throw new Error(userInfo)
+                }
+                if (userInfo.success) {
+                    saveAccessToken({ accessToken: userInfo.data.accessToken })
+                    router.push('/')
+                }
             }
         } catch (error: any) {
             toast.error("Failed to Create Patient", { id: loadingId })
