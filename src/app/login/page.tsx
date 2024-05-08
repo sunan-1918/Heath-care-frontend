@@ -1,4 +1,5 @@
 "use client"
+import { saveAccessToken } from "@/Service/actions/authservice";
 import { login } from "@/Service/actions/login";
 import assets from "@/assets";
 import { Box, Button, Container, Grid, Stack, TextField, Typography } from "@mui/material";
@@ -22,6 +23,7 @@ const LoginPage = () => {
     const onSubmit: SubmitHandler<Tlogin> = async (data) => {
 
         const loadingId = toast.loading("Loging...")
+        console.log(data);
 
         try {
             const response = await login(data);
@@ -31,7 +33,8 @@ const LoginPage = () => {
             }
             if (response.success) {
                 toast.success(response.message, { id: loadingId })
-                //router.push('/login')
+                saveAccessToken({ accessToken: response.data.accessToken })
+                router.push('/')
             }
         } catch (error: any) {
             toast.error("Failed to Login", { id: loadingId })
@@ -91,7 +94,7 @@ const LoginPage = () => {
                             <Typography textAlign='end' my={1}>
                                 Forgot Password?
                             </Typography>
-                            <Button type="submit" sx={{ margin: '5px 0px 15px 0px' }} fullWidth={true}>REGISTER</Button>
+                            <Button type="submit" sx={{ margin: '5px 0px 15px 0px' }} fullWidth={true}>LOG IN</Button>
                         </form>
                         <Typography component='p' textAlign='center'>
                             Don't have an account? <Link href='/register' className="text-blue-500">Create an account</Link>
