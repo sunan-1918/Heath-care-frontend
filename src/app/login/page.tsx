@@ -1,10 +1,43 @@
+"use client"
+import { login } from "@/Service/actions/login";
 import assets from "@/assets";
 import { Box, Button, Container, Grid, Stack, TextField, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
+interface Tlogin {
+    email: string;
+    password: string;
+}
 
 const LoginPage = () => {
+    const router = useRouter()
+    const {
+        register,
+        handleSubmit
+    } = useForm<Tlogin>()
+    const onSubmit: SubmitHandler<Tlogin> = async (data) => {
+
+        const loadingId = toast.loading("Loging...")
+
+        try {
+            const response = await login(data);
+
+            if (response.success === false) {
+                throw new Error(response)
+            }
+            if (response.success) {
+                toast.success(response.message, { id: loadingId })
+                //router.push('/login')
+            }
+        } catch (error: any) {
+            toast.error("Failed to Login", { id: loadingId })
+        }
+
+    }
     return (
         <Container>
             <Stack
@@ -32,34 +65,36 @@ const LoginPage = () => {
                         </Box>
                     </Stack>
                     <Box sx={{ margin: '30px 0px' }}>
-                        <Grid container spacing={2}>
-                            <Grid item md={6}>
-                                <TextField
-                                    id="outlined-basic"
-                                    label="Email"
-                                    type="email"
-                                    variant="outlined"
-                                    size="small"
-                                    fullWidth={true}
-                                />
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <Grid container spacing={2}>
+                                <Grid item md={6}>
+                                    <TextField
+                                        {...register("email", { required: true })}
+                                        label="Email"
+                                        type="email"
+                                        variant="outlined"
+                                        size="small"
+                                        fullWidth={true}
+                                    />
+                                </Grid>
+                                <Grid item md={6}>
+                                    <TextField
+                                        {...register("password", { required: true })}
+                                        label="Password"
+                                        type="password"
+                                        variant="outlined"
+                                        size="small"
+                                        fullWidth={true}
+                                    />
+                                </Grid>
                             </Grid>
-                            <Grid item md={6}>
-                                <TextField
-                                    id="outlined-basic"
-                                    label="Password"
-                                    type="password"
-                                    variant="outlined"
-                                    size="small"
-                                    fullWidth={true}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Typography textAlign='end' my={1}>
-                            Forgot Password?
-                        </Typography>
-                        <Button sx={{ margin: '5px 0px 15px 0px' }} fullWidth={true}>REGISTER</Button>
+                            <Typography textAlign='end' my={1}>
+                                Forgot Password?
+                            </Typography>
+                            <Button type="submit" sx={{ margin: '5px 0px 15px 0px' }} fullWidth={true}>REGISTER</Button>
+                        </form>
                         <Typography component='p' textAlign='center'>
-                            Don't have an account? <Link href='/login' className="text-blue-500">Create an account</Link>
+                            Don't have an account? <Link href='/register' className="text-blue-500">Create an account</Link>
                         </Typography>
                     </Box>
                 </Box>

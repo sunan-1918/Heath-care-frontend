@@ -1,10 +1,11 @@
 "use client"
-import { createPatient } from "@/Service/createPatient";
+import { createPatient } from "@/Service/actions/createPatient";
 import assets from "@/assets";
 import { modifyPayload } from "@/utils/FormData/modifyPayload";
 import { Box, Button, Container, Grid, Stack, TextField, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -21,12 +22,16 @@ interface Tpatient {
 }
 
 const RegisterPage = () => {
+    const router = useRouter()
     const {
         register,
         handleSubmit
     } = useForm<Tpatient>()
     const onSubmit: SubmitHandler<Tpatient> = async (data) => {
+
         const formData = modifyPayload(data)
+        console.log(data);
+
         const loadingId = toast.loading("Creating Patient...")
         try {
             const response = await createPatient(formData)
@@ -36,6 +41,7 @@ const RegisterPage = () => {
             }
             if (response.success) {
                 toast.success(response.message, { id: loadingId })
+                router.push('/login')
             }
         } catch (error: any) {
             toast.error("Failed to Create Patient", { id: loadingId })
