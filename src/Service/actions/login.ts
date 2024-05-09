@@ -1,4 +1,6 @@
-export const login = async (data: { email: string, password: string }) => {
+import { FieldValues } from "react-hook-form";
+
+export const login = async (data: FieldValues) => {
     const fetchData = await fetch(`http://localhost:5000/api/v1/auth/login`, {
         method: 'POST',
         body: JSON.stringify(data),

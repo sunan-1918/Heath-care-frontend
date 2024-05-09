@@ -2,28 +2,21 @@
 import { saveAccessToken } from "@/Service/actions/authservice";
 import { login } from "@/Service/actions/login";
 import assets from "@/assets";
-import { Box, Button, Container, Grid, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
+import ReUseForm from "@/components/Shared/Form/ReForm";
+import ReUseInput from "@/components/Shared/Form/ReInput";
 
-interface Tlogin {
-    email: string;
-    password: string;
-}
 
 const LoginPage = () => {
     const router = useRouter()
-    const {
-        register,
-        handleSubmit
-    } = useForm<Tlogin>()
-    const onSubmit: SubmitHandler<Tlogin> = async (data) => {
+    const handleLogin = async (data: FieldValues) => {
 
         const loadingId = toast.loading("Loging...")
-
         try {
             const response = await login(data);
 
@@ -67,26 +60,26 @@ const LoginPage = () => {
                         </Box>
                     </Stack>
                     <Box sx={{ margin: '30px 0px' }}>
-                        <form onSubmit={handleSubmit(onSubmit)}>
+                        <ReUseForm onSubmit={handleLogin}>
                             <Grid container spacing={2}>
                                 <Grid item md={6}>
-                                    <TextField
-                                        {...register("email", { required: true })}
+                                    <ReUseInput
+                                        name="email"
                                         label="Email"
                                         type="email"
-                                        variant="outlined"
                                         size="small"
                                         fullWidth={true}
+                                        required={true}
                                     />
                                 </Grid>
                                 <Grid item md={6}>
-                                    <TextField
-                                        {...register("password", { required: true })}
+                                    <ReUseInput
+                                        name="password"
                                         label="Password"
                                         type="password"
-                                        variant="outlined"
                                         size="small"
                                         fullWidth={true}
+                                        required={true}
                                     />
                                 </Grid>
                             </Grid>
@@ -94,7 +87,7 @@ const LoginPage = () => {
                                 Forgot Password?
                             </Typography>
                             <Button type="submit" sx={{ margin: '5px 0px 15px 0px' }} fullWidth={true}>LOG IN</Button>
-                        </form>
+                        </ReUseForm>
                         <Typography component='p' textAlign='center'>
                             Don't have an account? <Link href='/register' className="text-blue-500">Create an account</Link>
                         </Typography>

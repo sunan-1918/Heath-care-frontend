@@ -3,36 +3,24 @@ import { saveAccessToken } from "@/Service/actions/authservice";
 import { createPatient } from "@/Service/actions/createPatient";
 import { login } from "@/Service/actions/login";
 import assets from "@/assets";
+import ReUseForm from "@/components/Shared/Form/ReForm";
+import ReUseInput from "@/components/Shared/Form/ReInput";
 import { modifyPayload } from "@/utils/FormData/modifyPayload";
-import { Box, Button, Container, Grid, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 
-interface patientData {
-    name: string;
-    email: string;
-    address: string;
-    contactNumber: string;
-}
 
-interface Tpatient {
-    password: string;
-    patient: patientData
-}
 
 const RegisterPage = () => {
     const router = useRouter()
-    const {
-        register,
-        handleSubmit
-    } = useForm<Tpatient>()
-    const onSubmit: SubmitHandler<Tpatient> = async (data) => {
+
+    const onSubmit = async (data: FieldValues) => {
 
         const formData = modifyPayload(data)
-        console.log(data);
 
         const loadingId = toast.loading("Creating Patient...")
         try {
@@ -86,61 +74,61 @@ const RegisterPage = () => {
                         </Box>
                     </Stack>
                     <Box sx={{ margin: '30px 0px' }}>
-                        <form onSubmit={handleSubmit(onSubmit)}>
+                        <ReUseForm onSubmit={onSubmit}>
                             <Grid container spacing={2}>
                                 <Grid item md={12}>
-                                    <TextField
-                                        {...register("patient.name", { required: true })}
+                                    <ReUseInput
+                                        name="patient.name"
                                         label="Name"
                                         type="text"
-                                        variant="outlined"
+                                        required={true}
                                         size="small"
                                         fullWidth={true}
                                     />
                                 </Grid>
                                 <Grid item md={6}>
-                                    <TextField
-                                        {...register("patient.email", { required: true })}
+                                    <ReUseInput
+                                        name="patient.email"
                                         label="Email"
                                         type="email"
-                                        variant="outlined"
+                                        required={true}
                                         size="small"
                                         fullWidth={true}
                                     />
                                 </Grid>
                                 <Grid item md={6}>
-                                    <TextField
-                                        {...register("password", { required: true })}
+                                    <ReUseInput
+                                        name="password"
                                         label="Password"
                                         type="password"
-                                        variant="outlined"
+                                        required={true}
                                         size="small"
                                         fullWidth={true}
                                     />
                                 </Grid>
                                 <Grid item md={6}>
-                                    <TextField
-                                        {...register("patient.contactNumber", { required: true })}
+                                    <ReUseInput
+                                        name="patient.contactNumber"
                                         label="Contact Number"
                                         type="text"
-                                        variant="outlined"
+                                        required={true}
                                         size="small"
                                         fullWidth={true}
                                     />
                                 </Grid>
                                 <Grid item md={6}>
-                                    <TextField
-                                        {...register("patient.address", { required: true })}
+                                    <ReUseInput
+                                        name="patient.address"
                                         label="Address"
                                         type="text"
-                                        variant="outlined"
+                                        required={true}
                                         size="small"
                                         fullWidth={true}
                                     />
                                 </Grid>
                             </Grid>
                             <Button sx={{ margin: '15px 0px' }} fullWidth={true} type="submit">REGISTER</Button>
-                        </form>
+                        </ReUseForm>
                         <Typography component='p' textAlign='center'>
                             Do you already have an account? <Link href='/login' className="text-blue-500">Login</Link>
                         </Typography>
