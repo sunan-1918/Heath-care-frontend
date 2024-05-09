@@ -7,16 +7,16 @@ type Tcontroller = {
     type?: string;
     size?: "small" | 'medium';
     fullWidth?: boolean;
-    required: boolean;
+    required?: boolean;
 }
 
-const ReUseInput = ({ name, type = 'text', size = 'small', fullWidth = true, required, label }: Tcontroller) => {
+const ReUseInput = ({ name, type = 'text', size = 'small', fullWidth = true, label, required }: Tcontroller) => {
     const { control } = useFormContext()
     return (
         <Controller
             control={control}
             name={name}
-            render={({ field }) => (
+            render={({ field, fieldState: { error } }) => (
                 <TextField
                     {...field}
                     label={label}
@@ -25,6 +25,8 @@ const ReUseInput = ({ name, type = 'text', size = 'small', fullWidth = true, req
                     size={size}
                     fullWidth={fullWidth}
                     required={required}
+                    error={!!error?.message}
+                    helperText={error?.message}
                 />
             )}
         />

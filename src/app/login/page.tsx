@@ -10,7 +10,18 @@ import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 import ReUseForm from "@/components/Shared/Form/ReForm";
 import ReUseInput from "@/components/Shared/Form/ReInput";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+const loginValidationSchema = z.object({
+    email: z.string().email('Please Provide a Valid Email Address'),
+    password: z.string().min(8, "Password Must 8 characters")
+})
+
+const defaultValues = {
+    email: '',
+    password: ''
+}
 
 const LoginPage = () => {
     const router = useRouter()
@@ -60,16 +71,14 @@ const LoginPage = () => {
                         </Box>
                     </Stack>
                     <Box sx={{ margin: '30px 0px' }}>
-                        <ReUseForm onSubmit={handleLogin}>
+                        <ReUseForm onSubmit={handleLogin} resolver={zodResolver(loginValidationSchema)} defaultValues={defaultValues} >
                             <Grid container spacing={2}>
                                 <Grid item md={6}>
                                     <ReUseInput
                                         name="email"
                                         label="Email"
                                         type="email"
-                                        size="small"
                                         fullWidth={true}
-                                        required={true}
                                     />
                                 </Grid>
                                 <Grid item md={6}>
@@ -77,9 +86,7 @@ const LoginPage = () => {
                                         name="password"
                                         label="Password"
                                         type="password"
-                                        size="small"
                                         fullWidth={true}
-                                        required={true}
                                     />
                                 </Grid>
                             </Grid>

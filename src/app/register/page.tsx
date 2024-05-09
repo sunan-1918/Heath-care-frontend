@@ -6,14 +6,36 @@ import assets from "@/assets";
 import ReUseForm from "@/components/Shared/Form/ReForm";
 import ReUseInput from "@/components/Shared/Form/ReInput";
 import { modifyPayload } from "@/utils/FormData/modifyPayload";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
+const patientSchema = z.object({
+    name: z.string().min(1, "Give a valid Name"),
+    email: z.string().email('Please Provide a valid Email'),
+    contactNumber: z.string().regex(/^\d{11}/, 'Please Provide a valid Contact Number'),
+    address: z.string().min(1, 'Give a proper Address')
+})
 
+const RegisterSchema = z.object({
+    password: z.string().min(8, "Password Must 8 characters"),
+    patient: patientSchema
+})
+
+const defaultValues = {
+    password: '',
+    patient: {
+        name: '',
+        email: '',
+        contactNumber: '',
+        address: ''
+    }
+}
 
 const RegisterPage = () => {
     const router = useRouter()
@@ -74,14 +96,13 @@ const RegisterPage = () => {
                         </Box>
                     </Stack>
                     <Box sx={{ margin: '30px 0px' }}>
-                        <ReUseForm onSubmit={onSubmit}>
+                        <ReUseForm onSubmit={onSubmit} resolver={zodResolver(RegisterSchema)} defaultValues={defaultValues}>
                             <Grid container spacing={2}>
                                 <Grid item md={12}>
                                     <ReUseInput
                                         name="patient.name"
                                         label="Name"
                                         type="text"
-                                        required={true}
                                         size="small"
                                         fullWidth={true}
                                     />
@@ -91,7 +112,6 @@ const RegisterPage = () => {
                                         name="patient.email"
                                         label="Email"
                                         type="email"
-                                        required={true}
                                         size="small"
                                         fullWidth={true}
                                     />
@@ -101,7 +121,6 @@ const RegisterPage = () => {
                                         name="password"
                                         label="Password"
                                         type="password"
-                                        required={true}
                                         size="small"
                                         fullWidth={true}
                                     />
@@ -111,7 +130,6 @@ const RegisterPage = () => {
                                         name="patient.contactNumber"
                                         label="Contact Number"
                                         type="text"
-                                        required={true}
                                         size="small"
                                         fullWidth={true}
                                     />
@@ -121,7 +139,6 @@ const RegisterPage = () => {
                                         name="patient.address"
                                         label="Address"
                                         type="text"
-                                        required={true}
                                         size="small"
                                         fullWidth={true}
                                     />
