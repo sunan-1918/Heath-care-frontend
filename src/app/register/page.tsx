@@ -11,6 +11,7 @@ import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -39,6 +40,7 @@ const defaultValues = {
 
 const RegisterPage = () => {
     const router = useRouter()
+    const [error, setError] = useState('')
 
     const onSubmit = async (data: FieldValues) => {
 
@@ -63,6 +65,10 @@ const RegisterPage = () => {
                     saveAccessToken({ accessToken: userInfo.data.accessToken })
                     router.push('/')
                 }
+            }
+            else {
+                setError(response.message)
+                throw new Error()
             }
         } catch (error: any) {
             toast.error("Failed to Create Patient", { id: loadingId })
@@ -95,6 +101,12 @@ const RegisterPage = () => {
                             </Typography>
                         </Box>
                     </Stack>
+                    <Box sx={{ backgroundColor: 'red', margin: "8px", borderRadius: '10px' }}>
+                        {
+                            error &&
+                            <Typography sx={{ padding: '10px', color: 'white' }} textAlign='center' >{error}</Typography>
+                        }
+                    </Box>
                     <Box sx={{ margin: '30px 0px' }}>
                         <ReUseForm onSubmit={onSubmit} resolver={zodResolver(RegisterSchema)} defaultValues={defaultValues}>
                             <Grid container spacing={2}>

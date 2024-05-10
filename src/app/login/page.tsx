@@ -12,6 +12,7 @@ import ReUseForm from "@/components/Shared/Form/ReForm";
 import ReUseInput from "@/components/Shared/Form/ReInput";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 
 const loginValidationSchema = z.object({
     email: z.string().email('Please Provide a Valid Email Address'),
@@ -25,19 +26,21 @@ const defaultValues = {
 
 const LoginPage = () => {
     const router = useRouter()
+    const [error, setError] = useState('')
     const handleLogin = async (data: FieldValues) => {
 
         const loadingId = toast.loading("Loging...")
         try {
             const response = await login(data);
 
-            if (response.success === false) {
-                throw new Error(response)
-            }
             if (response.success) {
                 toast.success(response.message, { id: loadingId })
                 saveAccessToken({ accessToken: response.data.accessToken })
                 router.push('/')
+            }
+            else {
+                setError(response.message)
+                throw new Error()
             }
         } catch (error: any) {
             toast.error("Failed to Login", { id: loadingId })
@@ -70,6 +73,12 @@ const LoginPage = () => {
                             </Typography>
                         </Box>
                     </Stack>
+                    <Box sx={{ backgroundColor: 'red', margin: "8px", borderRadius: '10px' }}>
+                        {
+                            error &&
+                            <Typography sx={{ padding: '10px', color: 'white' }} textAlign='center' >{error}</Typography>
+                        }
+                    </Box>
                     <Box sx={{ margin: '30px 0px' }}>
                         <ReUseForm onSubmit={handleLogin} resolver={zodResolver(loginValidationSchema)} defaultValues={defaultValues} >
                             <Grid container spacing={2}>
