@@ -36,7 +36,7 @@ const LoginPage = () => {
             if (response.success) {
                 toast.success(response.message, { id: loadingId })
                 saveAccessToken({ accessToken: response.data.accessToken })
-                router.push('/')
+                router.push('/dashboard')
             }
             else {
                 setError(response.message)

@@ -63,7 +63,7 @@ const RegisterPage = () => {
                 }
                 if (userInfo.success) {
                     saveAccessToken({ accessToken: userInfo.data.accessToken })
-                    router.push('/')
+                    router.push('/dashboard')
                 }
             }
             else {

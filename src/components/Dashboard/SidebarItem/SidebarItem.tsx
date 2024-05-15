@@ -6,9 +6,16 @@ import Link from 'next/link';
 import { drawerItems } from '@/utils/drawerItem';
 import { UserRole } from '@/type';
 import SidebarListItem from './Sidebar';
+import { useEffect, useState } from 'react';
+import { getUserInfo } from '@/Service/actions/authservice';
 
 
 const SidebarItem = () => {
+    const [userRole, setUserRole] = useState('')
+    useEffect(() => {
+        const { role } = getUserInfo()
+        setUserRole(role)
+    }, [])
     return (
         <Box>
             <Stack

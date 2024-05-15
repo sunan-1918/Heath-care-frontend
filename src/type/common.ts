@@ -8,6 +8,14 @@ export type Tmeta = {
     total: number;
 }
 
+export interface JwtDecodedData {
+    userId: string;
+    role: "ADMIN" | 'SUPER_ADMIN' | "DOCTOR" | "PATIENT";
+    email: string;
+    iat: number;
+    exp: number;
+}
+
 export type UserRole = keyof typeof user_role
 
 export interface DrawerItem {

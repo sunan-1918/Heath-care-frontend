@@ -1,3 +1,4 @@
+import { JwtDecodedData } from "@/type"
 import { getTokenFromLocal, removeTokenFromLocal, setTokenInLocal } from "@/utils/FormData/localStorage"
 import { jwtDecode } from "jwt-decode"
 
@@ -12,9 +13,10 @@ export const removeAccessToken = () => {
 
 export const getUserInfo = () => {
     const token = getTokenFromLocal(key)
-    let decoded;
-    if (token) {
-        decoded = jwtDecode(token as string);
+    let decoded: JwtDecodedData;
+    if (!token) {
+        throw new Error('')
     }
+    decoded = jwtDecode(token as string);
     return decoded
 }
