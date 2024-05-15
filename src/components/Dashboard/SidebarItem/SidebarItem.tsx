@@ -1,35 +1,14 @@
-import Divider from '@mui/material/Divider';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
-import { Box, Stack, Toolbar, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
 import assets from '@/assets';
 import Link from 'next/link';
 import { drawerItems } from '@/utils/drawerItem';
 import { UserRole } from '@/type';
+import SidebarListItem from './Sidebar';
+
 
 const SidebarItem = () => {
-    const drawer = (
-        <div>
-            <List>
-                {drawerItems('admin' as UserRole).map((item, index) => (
-                    <ListItem key={index} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={item.title} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-        </div >
-    );
     return (
         <Box>
             <Stack
@@ -49,7 +28,11 @@ const SidebarItem = () => {
                     <Box component='span' color='primary.main'>H</Box>ealth Care
                 </Typography>
             </Stack>
-            {drawer}
+            <List>
+                {drawerItems('admin' as UserRole).map((item, index) => (
+                    <SidebarListItem key={index} item={item} />
+                ))}
+            </List>
         </Box>
     );
 };

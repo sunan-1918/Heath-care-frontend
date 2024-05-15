@@ -106,7 +106,5 @@ export const drawerItems = (role: UserRole) => {
         default:
             break;
     }
-    console.log(roleMenu);
-
     return [...roleMenu]
 }
