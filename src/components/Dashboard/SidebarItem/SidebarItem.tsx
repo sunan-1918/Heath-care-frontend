@@ -10,23 +10,25 @@ import { Box, Stack, Toolbar, Typography } from '@mui/material';
 import Image from 'next/image';
 import assets from '@/assets';
 import Link from 'next/link';
+import { drawerItems } from '@/utils/drawerItem';
+import { UserRole } from '@/type';
 
 const SidebarItem = () => {
     const drawer = (
         <div>
             <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
+                {drawerItems('admin' as UserRole).map((item, index) => (
+                    <ListItem key={index} disablePadding>
                         <ListItemButton>
                             <ListItemIcon>
                                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                             </ListItemIcon>
-                            <ListItemText primary={text} />
+                            <ListItemText primary={item.title} />
                         </ListItemButton>
                     </ListItem>
                 ))}
             </List>
-        </div>
+        </div >
     );
     return (
         <Box>
