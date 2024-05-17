@@ -13,7 +13,7 @@ import { getUserInfo } from '@/Service/actions/authservice';
 const SidebarItem = () => {
     const [userRole, setUserRole] = useState('')
     useEffect(() => {
-        const { role } = getUserInfo()
+        const { role } = getUserInfo() as any
         setUserRole(role)
     }, [])
     return (
@@ -36,7 +36,7 @@ const SidebarItem = () => {
                 </Typography>
             </Stack>
             <List>
-                {drawerItems('admin' as UserRole).map((item, index) => (
+                {drawerItems(userRole as UserRole).map((item, index) => (
                     <SidebarListItem key={index} item={item} />
                 ))}
             </List>

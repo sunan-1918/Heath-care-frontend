@@ -4,6 +4,7 @@ import { jwtDecode } from "jwt-decode"
 
 const key = 'accessToken'
 
+
 export const saveAccessToken = async (data: { accessToken: string }) => {
     return setTokenInLocal(key, data.accessToken)
 }
@@ -15,7 +16,7 @@ export const getUserInfo = () => {
     const token = getTokenFromLocal(key)
     let decoded: JwtDecodedData;
     if (!token) {
-        throw new Error('')
+        return
     }
     decoded = jwtDecode(token as string);
     return decoded

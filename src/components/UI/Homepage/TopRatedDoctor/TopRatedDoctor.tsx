@@ -9,6 +9,7 @@ const TopRatedDoctor = async () => {
         }
     })
     const { data: doctors } = await res.json()
+
     return (
 
         <Box sx={{
@@ -31,7 +32,7 @@ const TopRatedDoctor = async () => {
             <Container sx={{ margin: "30px auto" }}>
                 <Grid container spacing={2}>
                     {
-                        doctors.map((doctor: any) => (
+                        doctors && doctors.map((doctor: any) => (
                             <Grid item key={doctor.id} md={4}>
                                 <Card sx={{ maxWidth: 345 }}>
                                     <Box>
