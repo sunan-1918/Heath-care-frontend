@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation";
 
 
 const SidebarListItem = ({ item }: { item: DrawerItem }) => {
-    const linkPath = `/dashboard/${item.path}`
+    const path = item.path.toLocaleLowerCase()
+    const linkPath = `/dashboard/${path}`
     const pathName = usePathname()
     return (
         <Link href={linkPath}>
