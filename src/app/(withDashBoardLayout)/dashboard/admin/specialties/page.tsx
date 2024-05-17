@@ -1,32 +1,64 @@
 'use client'
-import { Box, Button, Skeleton, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, IconButton, Skeleton, Stack, TextField, Typography } from "@mui/material";
 import SpecialtyModal from "./component/specialtyModal";
 import { useState } from "react";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { useGetAllSpecialityQuery } from "@/Redux/api/specialityApi";
+import { useDeleteSpecialityMutation, useGetAllSpecialityQuery } from "@/Redux/api/specialityApi";
 import Image from "next/image";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { toast } from "sonner";
 
-const columns: GridColDef[] = [
-    { field: 'title', headerName: 'Title', width: 130 },
-    {
-        field: 'icon',
-        headerName: 'Icon',
-        width: 250,
-        renderCell: ({ row }) => {
-            return (
-                <Box sx={{ mt: 2 }}>
-
-                    <Image src={row.icon} width={30} height={30} alt='icon' />
-                </Box>
-            )
-        }
-    },
-];
 
 
 const SpecialtiesPage = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const { data, isLoading } = useGetAllSpecialityQuery({})
+    const [deleteSpeciality] = useDeleteSpecialityMutation()
+
+    const handleDelete = async (id: string) => {
+        try {
+            const res = await deleteSpeciality(id).unwrap()
+            if (res.success) {
+                toast.success(res.message)
+            }
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
+
+    const columns: GridColDef[] = [
+        { field: 'title', headerName: 'Title', width: 300 },
+        {
+            field: 'icon',
+            headerName: 'Icon',
+            flex: 1,
+            renderCell: ({ row }) => {
+                return (
+                    <Box sx={{ mt: 1 }}>
+
+                        <Image src={row.icon} width={30} height={30} alt='icon' />
+                    </Box>
+                )
+            }
+        },
+        {
+            field: 'action',
+            headerName: 'Action',
+            flex: 1,
+            headerAlign: 'center',
+            align: 'center',
+            renderCell: ({ row }) => {
+                return (
+                    <Box >
+                        <IconButton onClick={() => handleDelete(row.id)} aria-label="delete">
+                            <DeleteIcon />
+                        </IconButton>
+                    </Box>
+                )
+            }
+        }
+    ];
 
     return (
         <Box>
