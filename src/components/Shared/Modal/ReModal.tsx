@@ -59,11 +59,6 @@ export default function ReModal({ open = false, setOpen, title = '', children, s
                 <DialogContent dividers>
                     {children}
                 </DialogContent>
-                <DialogActions>
-                    <Button autoFocus onClick={handleClose}>
-                        Save changes
-                    </Button>
-                </DialogActions>
             </BootstrapDialog>
         </React.Fragment>
     );
