@@ -1,9 +1,13 @@
+import { useCreateDoctorMutation } from "@/Redux/api/Doctor/doctorApi";
 import ReUseForm from "@/components/Shared/Form/ReForm";
 import ReUseInput from "@/components/Shared/Form/ReInput";
+import ReUseSelect from "@/components/Shared/Form/ReSelect";
 import ReFullModal from "@/components/Shared/Modal/ReFullModal";
+import { modifyPayload } from "@/utils/FormData/modifyPayload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Grid } from "@mui/material";
 import { FieldValues } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 
@@ -14,12 +18,12 @@ type IModal = {
 const doctorSchema = z.object({
     email: z.string().email({ message: 'Invalid email address' }),
     name: z.string().min(1, { message: 'Name cannot be empty' }),
-    contactNumber: z.string().regex(/^\+\d{10,15}$/, { message: 'Invalid contact number format' }),
+    contactNumber: z.string().min(11, { message: 'Invalid contact number format' }),
     address: z.string().min(1, { message: 'Address cannot be empty' }),
     registrationNumber: z.string().min(1, { message: 'Registration number cannot be empty' }),
-    experience: z.number().int().min(0, { message: 'Experience must be a non-negative integer' }),
+    experience: z.string().min(1, { message: 'Experience must be a non-negative integer' }),
     gender: z.enum(['MALE', 'FEMALE', 'OTHER'], { message: 'Invalid gender value' }),
-    apointmentFee: z.number().int().min(0, { message: 'Appointment fee must be a non-negative number' }),
+    apointmentFee: z.string().min(0, { message: 'Appointment fee must be a non-negative number' }),
     qualification: z.string().min(1, { message: 'Qualification cannot be empty' }),
     currentWorkingPlace: z.string().min(1, { message: 'Current working place cannot be empty' }),
     designation: z.string().min(1, { message: 'Designation cannot be empty' }),
@@ -47,8 +51,23 @@ const defaultValues = {
 }
 
 const DoctorModal = ({ open, setOpen }: IModal) => {
+    const [createDoctor] = useCreateDoctorMutation()
     const handleSubmit = async (value: FieldValues) => {
+        value.doctor.apointmentFee = Number(value.doctor.apointmentFee)
+        value.doctor.experience = Number(value.doctor.experience)
+        const data = modifyPayload(value)
+        const id = toast.loading("Creating Doctor...")
+        try {
+            const res = await createDoctor(data).unwrap()
+            if (res?.id) {
+                toast.success('Doctor Created Successfully!!!', { id })
+                setOpen(false)
+            }
 
+        } catch (error: any) {
+            console.log(error);
+            toast.error(error.message, { id });
+        }
 
     }
     return (
@@ -62,7 +81,7 @@ const DoctorModal = ({ open, setOpen }: IModal) => {
                         <ReUseInput type="text" label="Email" name="doctor.email" />
                     </Grid>
                     <Grid item md={4}>
-                        <ReUseInput type="text" label="Password" name="password" />
+                        <ReUseInput type="password" label="Password" name="password" />
                     </Grid>
                     <Grid item md={4}>
                         <ReUseInput type="text" label="Contact Number" name="doctor.contactNumber" />
@@ -77,7 +96,7 @@ const DoctorModal = ({ open, setOpen }: IModal) => {
                         <ReUseInput type="text" label="Experience" name="doctor.experience" />
                     </Grid>
                     <Grid item md={4}>
-                        <ReUseInput type="text" label="Gender" name="doctor.gender" />
+                        <ReUseSelect type="text" label="Gender" name="doctor.gender" options={['MALE', 'FEMALE']} />
                     </Grid>
                     <Grid item md={4}>
                         <ReUseInput type="text" label="Appointment Fee" name="doctor.apointmentFee" />
